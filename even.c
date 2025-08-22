@@ -1,37 +1,43 @@
+// even.c
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
+// Handle SIGINT (Ctrl+C)
 void sig_int(int int_signal) {
   printf("Yeah!\n");
   fflush(stdout);
 }
 
+// Handle SIGHUP (hangup)
 void sig_hup(int hup_signal) {
   printf("Ouch!\n");
   fflush(stdout);
 }
 
-int main() {
-  signal(SIGINT, sig_int);  // call sig_int when SIGINT recieved
-  signal(SIGHUP, sig_hup);  // call sig_hup when SIGHUP recieved
+int main(int argc, char *argv[]) {
+  // Install signal handlers
+  signal(SIGINT, sig_int);
+  signal(SIGHUP, sig_hup);
 
-  // take user input
-  int number;
-  printf("Enter a number: ");
-  scanf("%d", &number);
-
-  // make sure n is a positive number
-  if (number < 0) {
-    printf("please enter a positive number \n");
-    return -1;
+  // Check command line argument
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <positive number>\n", argv[0]);
+    return 1;
   }
 
-  // prints the first n even numbers starting from 0
+  int number = atoi(argv[1]);  // convert command line argument to int
+  if (number < 0) {
+    fprintf(stderr, "Please enter a positive number\n");
+    return 1;
+  }
+
+  // Print the first n even numbers
   for (int i = 0; i < 2 * number; i += 2) {
     printf("%d ", i);
     fflush(stdout);
-    sleep(5);  // implement delay using sleep
+    sleep(5);  // delay to allow time for signals
   }
   printf("\n");
   return 0;
