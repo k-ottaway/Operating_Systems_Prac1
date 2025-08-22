@@ -13,9 +13,10 @@ void sig_hup(int hup_signal) {
 }
 
 int main() {
-  signal(SIGINT, sig_int);
-  signal(SIGHUP, sig_hup);
+  signal(SIGINT, sig_int);  // call sig_int when SIGINT recieved
+  signal(SIGHUP, sig_hup);  // call sig_hup when SIGHUP recieved
 
+  // take user input
   int number;
   printf("Enter a number: ");
   scanf("%d", &number);
@@ -30,7 +31,7 @@ int main() {
   for (int i = 0; i < 2 * number; i += 2) {
     printf("%d ", i);
     fflush(stdout);
-    sleep(5);
+    sleep(5);  // implement delay using sleep
   }
   printf("\n");
   return 0;

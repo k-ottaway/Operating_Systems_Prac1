@@ -1,0 +1,4 @@
+echo timing1
+sleep 2 &
+echo timing2
+sleep 5
