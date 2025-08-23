@@ -71,7 +71,7 @@ void new_job(pid_t pid, char *cmdline) {
     return;
   }
 
-  job_ptr->id = number_jobs++;             // assign new job id
+  job_ptr->id = ++number_jobs;             // assign new job id
   job_ptr->pid = pid;                      // store the PID
   strncpy(job_ptr->cmd, cmdline, NL - 1);  // copy the command string
   job_ptr->cmd[NL - 1] = '\0';
