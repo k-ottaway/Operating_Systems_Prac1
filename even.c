@@ -20,14 +20,31 @@ int main(int argc, char *argv[]) {
   }
 
   int n = atoi(argv[1]);
-  signal(SIGINT, handle_signal);
-  signal(SIGHUP, handle_signal);
+  if (n < 0) {
+    fprintf(stderr, "n must be non-negative\n");
+    return 1;
+  }
 
-  // prints the first n even numbers starting from 0
-  for (int i = 0; i < 2 * n; i += 2) {
-    printf("%d ", i);
+  // Use sigaction (preferred over signal)
+  struct sigaction sa;
+  sa.sa_handler = handle_signal;
+  sa.sa_flags = 0;
+  sigemptyset(&sa.sa_mask);
+
+  if (sigaction(SIGHUP, &sa, NULL) == -1) {
+    perror("sigaction SIGHUP");
+    return 1;
+  }
+  if (sigaction(SIGINT, &sa, NULL) == -1) {
+    perror("sigaction SIGINT");
+    return 1;
+  }
+
+  for (int i = 0; i < n; i++) {
+    printf("%d\n", 2 * i);
     fflush(stdout);
     sleep(5);
   }
+
   return 0;
 }
